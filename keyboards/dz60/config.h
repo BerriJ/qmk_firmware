@@ -49,3 +49,8 @@
 
 /* VIA related config */
 #define VIA_EEPROM_LAYOUT_OPTIONS_SIZE 2
+
+/* Define Space Cadet Keys */
+#define LSPO_KEYS KC_LSFT, LSPO_MOD, KC_8
+#define LCPO_KEYS KC_LCTL, KC_RALT, KC_8
+#define LAPO_KEYS KC_LALT, KC_RALT, KC_7
