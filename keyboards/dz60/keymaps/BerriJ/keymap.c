@@ -37,12 +37,7 @@ void dance_cln_finished (qk_tap_dance_state_t *state, void *user_data) {
   } else if (state->count == 2) {
     register_code (DE_CIRC);
 		unregister_code (DE_CIRC);
-  } else if (state->count == 3) {
-		register_code (KC_LCTRL);
-		register_code (KC_L);
-	} else if (state->count == 4) {
-		register_code (KC_POWER);
-	}
+  }
 }
 
 void dance_cln_reset (qk_tap_dance_state_t *state, void *user_data) {
@@ -56,18 +51,27 @@ void dance_cln_reset (qk_tap_dance_state_t *state, void *user_data) {
   } else if (state->count == 2) {
 		register_code (DE_CIRC);
     unregister_code (DE_CIRC);
-  } else if (state->count == 3) {
-		unregister_code (KC_LCTRL);
-		unregister_code (KC_L);
-	} else if (state->count == 4) {
-		unregister_code (KC_POWER);
-	}
+  }
 }
 
 //All tap dance functions would go here. Only showing this one.
 qk_tap_dance_action_t tap_dance_actions[] = {
  [CT_CLN] = ACTION_TAP_DANCE_FN_ADVANCED (NULL, dance_cln_finished, dance_cln_reset)
 };
+
+//Caps Lock LED
+void matrix_init_user(void) {
+  DDRB |= (1 << 2);
+  PORTB &= ~(1 << 2);
+}
+
+void led_set_user(uint8_t usb_led) {
+  if (usb_led & (1<<USB_LED_CAPS_LOCK)) {
+    PORTB |= (1 << 2);
+  } else {
+    PORTB &= ~(1 << 2);
+  }
+}
 
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -80,16 +84,16 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 		KC_LCPO, KC_LGUI, KC_LAPO, KC_NO, LT(1, KC_SPC), KC_NO, KC_NO, KC_RALT, KC_NO, KC_AUDIO_MUTE, KC_RCTRL),
 
 	LAYOUT(
-		DE_CIRC, KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8, KC_F9, KC_F10, KC_F11, KC_F12, KC_TRNS, KC_AUDIO_VOL_UP,
-		RESET, KC_TRNS, KC_TRNS, KC_TRNS, LCTL(LSFT(KC_Y)), KC_TRNS, RCTL(KC_Y), KC_UP, KC_TRNS, KC_TRNS, PIPE, KC_TRNS, KC_TRNS, KC_TRNS,
+		LCTL(KC_L), KC_F1, KC_F2, KC_F3, KC_F4, KC_F5, KC_F6, KC_F7, KC_F8, KC_F9, KC_F10, KC_F11, KC_F12, KC_TRNS, KC_AUDIO_VOL_UP,
+		RESET, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_UP, KC_TRNS, KC_TRNS, PIPE, KC_TRNS, KC_TRNS, KC_TRNS,
 		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, LCTL(KC_F), KC_TRNS, KC_LEFT, KC_DOWN, KC_RIGHT, KC_TRNS, KC_TRNS, KC_TRNS, KC_MEDIA_PLAY_PAUSE,
 		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_AUDIO_VOL_DOWN, KC_NO,
 		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_MEDIA_PREV_TRACK, KC_NO, KC_MEDIA_PLAY_PAUSE, KC_MEDIA_NEXT_TRACK),
 
 	LAYOUT(
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_DEL,
+		KC_POWER, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_DEL,
 		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_PGUP, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
-		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_PGDOWN, KC_END, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
+		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_LEFT, KC_PGDOWN, KC_END, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS,
 		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_NO,
 		KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_TRNS, KC_MENU, KC_TRNS),
 };
